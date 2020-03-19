@@ -40,7 +40,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
-	float RaycastDistance = 500.f;
+	float RaycastDistance = 250.f;
 
 
 protected:

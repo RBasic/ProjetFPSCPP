@@ -47,12 +47,13 @@ void AProtoFPSCPPCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	Start = FirstPersonCameraComponent->GetComponentLocation();
-	End = FirstPersonCameraComponent->GetForwardVector() * RaycastDistance + GetActorLocation();
+	Start = GetFirstPersonCameraComponent()->GetComponentLocation();
+	End = GetFirstPersonCameraComponent()->GetForwardVector() * RaycastDistance + GetFirstPersonCameraComponent()->GetComponentLocation();
 	FCollisionQueryParams TraceParams;
 	GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, TraceParams);
 
-	if (PhysicsHandle->GetGrabbedComponent()) {
+	if(PhysicsHandle->GetGrabbedComponent()) {
+		PhysicsHandle->SetTargetLocation(End);
 		GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("You are hitting: %s"),
 			*PhysicsHandle->GetGrabbedComponent()->GetName()));
 	}
@@ -115,7 +116,7 @@ void AProtoFPSCPPCharacter::Interact()
 {
 	DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.0f);
 	if (Hit.GetComponent()) {
-		PhysicsHandle->GrabComponentAtLocation(Hit.GetComponent(), Hit.BoneName, End);
+		PhysicsHandle->GrabComponentAtLocation(Hit.GetComponent(), Hit.BoneName, Hit.GetComponent()->GetCenterOfMass());
 		if (GEngine) {
 			GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("You are hitting: %s"),
 				*Hit.GetActor()->GetName()));
