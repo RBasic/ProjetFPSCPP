@@ -42,6 +42,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
 	float RaycastDistance = 250.f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay)
+	float ThrowPower = 800.f;
+
 
 protected:
 	
@@ -70,6 +73,7 @@ protected:
 	*
 	*/
 	void Interact();
+	void Throw();
 	
 protected:
 	// APawn interface

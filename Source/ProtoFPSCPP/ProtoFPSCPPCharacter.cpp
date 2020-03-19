@@ -56,6 +56,7 @@ void AProtoFPSCPPCharacter::Tick(float DeltaTime)
 		PhysicsHandle->SetTargetLocation(End);
 		GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("You are hitting: %s"),
 			*PhysicsHandle->GetGrabbedComponent()->GetName()));
+
 	}
 }
 
@@ -68,6 +69,7 @@ void AProtoFPSCPPCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 	check(PlayerInputComponent);
 
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AProtoFPSCPPCharacter::Interact);
+	PlayerInputComponent->BindAction("Throw", IE_Pressed, this, &AProtoFPSCPPCharacter::Throw);
 
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AProtoFPSCPPCharacter::MoveForward);
@@ -114,14 +116,30 @@ void AProtoFPSCPPCharacter::LookUpAtRate(float Rate)
 
 void AProtoFPSCPPCharacter::Interact()
 {
-	DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.0f);
-	if (Hit.GetComponent()) {
-		PhysicsHandle->GrabComponentAtLocation(Hit.GetComponent(), Hit.BoneName, Hit.GetComponent()->GetCenterOfMass());
-		if (GEngine) {
-			GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("You are hitting: %s"),
-				*Hit.GetActor()->GetName()));
-			GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("Impact Point : %s"),
-				*Hit.ImpactPoint.ToString()));
+	if (PhysicsHandle->GetGrabbedComponent()) {
+		PhysicsHandle->GetGrabbedComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+		PhysicsHandle->ReleaseComponent();
+	}
+	else {
+		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.0f);
+		if (Hit.GetComponent()) {
+			PhysicsHandle->GrabComponentAtLocation(Hit.GetComponent(), Hit.BoneName, Hit.GetComponent()->GetCenterOfMass());
+			PhysicsHandle->GetGrabbedComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+			if (GEngine) {
+				GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("You are hitting: %s"),
+					*Hit.GetActor()->GetName()));
+				GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("Impact Point : %s"),
+					*Hit.ImpactPoint.ToString()));
+			}
 		}
+	}
+}
+
+void AProtoFPSCPPCharacter::Throw()
+{
+	if (PhysicsHandle->GetGrabbedComponent()) {
+		PhysicsHandle->GetGrabbedComponent()->AddImpulse(GetFirstPersonCameraComponent()->GetForwardVector() * ThrowPower,NAME_None,true);
+		PhysicsHandle->GetGrabbedComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+		PhysicsHandle->ReleaseComponent();
 	}
 }
