@@ -12,6 +12,7 @@ UCLASS(config=Game)
 class AProtoFPSCPPCharacter : public ACharacter
 {
 	GENERATED_BODY()
+
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FirstPersonCameraComponent;
@@ -32,16 +33,18 @@ protected:
 
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
 
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+	/** Interaction distance with raycast. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
 	float RaycastDistance = 250.f;
 
+	/** Velocity impulse applied with no mass. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay)
 	float ThrowPower = 800.f;
 
@@ -68,10 +71,7 @@ protected:
 	void LookUpAtRate(float Rate);
 
 protected:
-	/*
-	* Player interaction with mouse button or F
-	*
-	*/
+	/** Player interaction with mouse button or F */
 	void Interact();
 	void Throw();
 	
@@ -81,7 +81,7 @@ protected:
 	// End of APawn interface
 
 public:
-	/** Returns FirstPersonCameraComponent subobject **/
+	/** Returns FirstPersonCameraComponent subobject */
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 };
