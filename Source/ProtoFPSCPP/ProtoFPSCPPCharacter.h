@@ -42,7 +42,7 @@ public:
 
 	/** Interaction distance with raycast. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
-	float RaycastDistance = 250.f;
+	float RaycastDistance = 400.f;
 
 	/** Velocity impulse applied with no mass. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay)

@@ -2,6 +2,8 @@
 
 
 #include "Components/StaticMeshComponent.h"
+#include "Cube.h"
+#include "Kismet/GameplayStatics.h"
 #include "RespawnCubeButton.h"
 
 // Sets default values
@@ -11,12 +13,15 @@ ARespawnCubeButton::ARespawnCubeButton()
 	PrimaryActorTick.bCanEverTick = true;
 	mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("mesh"));
 	SetRootComponent(mesh);
+	mesh->SetNotifyRigidBodyCollision(true);
+	mesh->SetCollisionObjectType(ECC_GameTraceChannel3);
 }
 
 // Called when the game starts or when spawned
 void ARespawnCubeButton::BeginPlay()
 {
 	Super::BeginPlay();
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACube::StaticClass(),cubeRef);
 }
 
 // Called every frame
@@ -27,7 +32,7 @@ void ARespawnCubeButton::Tick(float DeltaTime)
 }
 
 void ARespawnCubeButton::Interact() {
-	if (cubeRef) {
-		cubeRef->SetActorLocation(respawnLocation);
+	for (AActor* cube : cubeRef) {
+		Cast<ACube>(cube)->respawnCube();
 	}
 }

@@ -16,14 +16,13 @@ public:
 	ARespawnCubeButton();
 
 	UPROPERTY(EditAnywhere)
-	FVector respawnLocation;
-
-	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* mesh;
 
+	UPROPERTY(VisibleAnywhere)
+	TArray<AActor*> cubeRef;
+
 	UPROPERTY(EditAnywhere)
-	class AActor* cubeRef;
-	
+	bool active = false;
 
 protected:
 	// Called when the game starts or when spawned
