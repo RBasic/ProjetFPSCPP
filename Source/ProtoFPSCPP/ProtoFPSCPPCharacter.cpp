@@ -12,6 +12,7 @@
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "DrawDebugHelpers.h"
 #include "EngineGlobals.h"
+#include "RespawnCubeButton.h"
 #include "Engine.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
@@ -117,26 +118,32 @@ void AProtoFPSCPPCharacter::LookUpAtRate(float Rate)
 
 void AProtoFPSCPPCharacter::Interact()
 {
-	if (Hit.GetComponent()) {
-		if (Hit.GetComponent()->GetCollisionObjectType() == ECC_GameTraceChannel3) {
-			UStaticMeshComponent* temp = Cast<UStaticMeshComponent>(Hit.GetComponent());
-			temp->SetVectorParameterValueOnMaterials("DiffuseColor", FVector(0, 0, 0));
+	if (Hit.GetActor()) {
+		ARespawnCubeButton* temp = Cast<ARespawnCubeButton>(Hit.GetActor());
+		if (temp) {
+			temp->Interact();
 		}
-		else if (Hit.GetComponent()->GetCollisionObjectType() == ECC_GameTraceChannel2) {
-			if (PhysicsHandle->GetGrabbedComponent()) {
-				PhysicsHandle->GetGrabbedComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
-				PhysicsHandle->ReleaseComponent();
+		else if (Hit.GetComponent()) {
+			if (Hit.GetComponent()->GetCollisionObjectType() == ECC_GameTraceChannel3) {
+				UStaticMeshComponent* temp = Cast<UStaticMeshComponent>(Hit.GetComponent());
+				temp->SetVectorParameterValueOnMaterials("DiffuseColor", FVector(0, 0, 0));
 			}
-			else {
-				DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.0f);
-				if (Hit.GetComponent()) {
-					PhysicsHandle->GrabComponentAtLocation(Hit.GetComponent(), Hit.BoneName, Hit.GetComponent()->GetCenterOfMass());
-					PhysicsHandle->GetGrabbedComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
-					if (GEngine) {
-						GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("You are hitting: %s"),
-							*Hit.GetActor()->GetName()));
-						GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("Impact Point : %s"),
-							*Hit.ImpactPoint.ToString()));
+			else if (Hit.GetComponent()->GetCollisionObjectType() == ECC_GameTraceChannel2) {
+				if (PhysicsHandle->GetGrabbedComponent()) {
+					PhysicsHandle->GetGrabbedComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+					PhysicsHandle->ReleaseComponent();
+				}
+				else {
+					DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.0f);
+					if (Hit.GetComponent()) {
+						PhysicsHandle->GrabComponentAtLocation(Hit.GetComponent(), Hit.BoneName, Hit.GetComponent()->GetCenterOfMass());
+						PhysicsHandle->GetGrabbedComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+						if (GEngine) {
+							GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("You are hitting: %s"),
+								*Hit.GetActor()->GetName()));
+							GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("Impact Point : %s"),
+								*Hit.ImpactPoint.ToString()));
+						}
 					}
 				}
 			}
