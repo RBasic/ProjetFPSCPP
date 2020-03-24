@@ -37,6 +37,9 @@ AProtoFPSCPPCharacter::AProtoFPSCPPCharacter()
 
 	//Create PhysicsHandleComponent
 	PhysicsHandle = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("PhysicsHandle"));
+
+	//Create Sprint
+	SprintSpeedMultiplier = 2.0f;
 }
 
 void AProtoFPSCPPCharacter::BeginPlay()
@@ -72,6 +75,9 @@ void AProtoFPSCPPCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AProtoFPSCPPCharacter::Interact);
 	PlayerInputComponent->BindAction("Throw", IE_Pressed, this, &AProtoFPSCPPCharacter::Throw);
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AProtoFPSCPPCharacter::Sprint);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AProtoFPSCPPCharacter::StopSprinting);
+
 
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AProtoFPSCPPCharacter::MoveForward);
@@ -158,4 +164,12 @@ void AProtoFPSCPPCharacter::Throw()
 		PhysicsHandle->GetGrabbedComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
 		PhysicsHandle->ReleaseComponent();
 	}
+}
+
+void AProtoFPSCPPCharacter::Sprint() {
+	GetCharacterMovement()->MaxWalkSpeed *= SprintSpeedMultiplier;
+}
+
+void AProtoFPSCPPCharacter::StopSprinting() {
+	GetCharacterMovement()->MaxWalkSpeed /= SprintSpeedMultiplier;
 }

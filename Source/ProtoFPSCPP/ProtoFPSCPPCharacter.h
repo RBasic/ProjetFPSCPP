@@ -48,6 +48,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay)
 	float ThrowPower = 800.f;
 
+	/** Sprint */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Movement: walking")
+		float SprintSpeedMultiplier;
 
 protected:
 	
@@ -69,6 +72,11 @@ protected:
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
 	 */
 	void LookUpAtRate(float Rate);
+
+	/**Sprint */
+	void Sprint();
+	void StopSprinting();
+
 
 protected:
 	/** Player interaction with mouse button or F */
