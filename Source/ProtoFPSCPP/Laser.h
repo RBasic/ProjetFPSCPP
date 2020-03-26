@@ -14,14 +14,26 @@ class PROTOFPSCPP_API ALaser : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ALaser();
+
+	UPROPERTY(EditAnywhere, meta=(MakeEditWidget = true))
+	FVector StartBegin;
+
+	UPROPERTY(EditAnywhere, meta = (MakeEditWidget = true))
+	FVector StartFinal;
+
+	UPROPERTY(EditAnywhere, meta=(MakeEditWidget = true))
+	FVector EndBegin;
+
+	UPROPERTY(EditAnywhere, meta = (MakeEditWidget = true))
+	FVector EndFinal;
+
+	float Alpha = 0.f;
+
 	UPROPERTY(EditAnywhere)
-	FVector Start;
+	float Speed = 1.f;
+
 	UPROPERTY(EditAnywhere)
-	FVector End;
-	UPROPERTY(EditAnywhere)
-		float distance ;
-	UPROPERTY(EditAnywhere)
-		class UStaticMeshComponent* startMesh;
+	class UParticleSystemComponent* Particles;
 
 
 protected:

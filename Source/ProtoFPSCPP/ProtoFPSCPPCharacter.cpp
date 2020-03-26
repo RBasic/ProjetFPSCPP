@@ -59,7 +59,7 @@ void AProtoFPSCPPCharacter::Tick(float DeltaTime)
 	GetWorld()->LineTraceSingleByObjectType(Hit,Start,End,queryParams);
 
 	if(PhysicsHandle->GetGrabbedComponent()) {
-		PhysicsHandle->SetTargetLocation(End);
+		PhysicsHandle->SetTargetLocationAndRotation(End,FRotator::ZeroRotator);
 		GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("You are hitting: %s"),
 			*PhysicsHandle->GetGrabbedComponent()->GetName()));
 	}
@@ -142,7 +142,7 @@ void AProtoFPSCPPCharacter::Interact()
 				else {
 					DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.0f);
 					if (Hit.GetComponent()) {
-						PhysicsHandle->GrabComponentAtLocation(Hit.GetComponent(), Hit.BoneName, Hit.GetComponent()->GetCenterOfMass());
+						PhysicsHandle->GrabComponentAtLocationWithRotation(Hit.GetComponent(), Hit.BoneName, Hit.GetComponent()->GetCenterOfMass(),FRotator::ZeroRotator);
 						PhysicsHandle->GetGrabbedComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 						if (GEngine) {
 							GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("You are hitting: %s"),

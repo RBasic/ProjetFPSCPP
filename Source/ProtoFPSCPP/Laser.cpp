@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Components/StaticMeshComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "Laser.h"
 #include "DrawDebugHelpers.h"
 
@@ -10,23 +11,34 @@ ALaser::ALaser()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	startMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("startMesh"));
-	SetRootComponent(startMesh);
+	Particles = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ParticleSystem"));
+	SetRootComponent(Particles);
 }
 
 // Called when the game starts or when spawned
 void ALaser::BeginPlay()
 {
 	Super::BeginPlay();
-	Start = startMesh->GetComponentLocation();
-	End = startMesh->GetComponentLocation() + startMesh->GetForwardVector() * distance; 
-	DrawDebugLine(GetWorld(), Start, End,FColor::Red,true);
 }
 
 // Called every frame
 void ALaser::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	Alpha += DeltaTime * Speed;
+	if (Alpha >= 1) {
+		Speed *= -1;
+		Alpha = 1;
+	}
+	else if (Alpha <= 0) { 
+		Speed *= -1; 
+		Alpha = 0;
+	}
+	FVector currentStart = FMath::Lerp(GetActorLocation() + StartBegin, GetActorLocation() + StartFinal, Alpha);
+	FVector currentEnd = FMath::Lerp(GetActorLocation() + EndBegin, GetActorLocation() + EndFinal, Alpha);
+	//DrawDebugLine(GetWorld(), currentStart, currentEnd, FColor::Red, false);
+	if (Particles) {
+		Particles->SetBeamSourcePoint(0, currentStart, 0);
+		Particles->SetBeamTargetPoint(0, currentEnd, 0);
+	}
 }
-

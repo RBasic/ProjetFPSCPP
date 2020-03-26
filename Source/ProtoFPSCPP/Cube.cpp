@@ -31,6 +31,8 @@ void ACube::Tick(float DeltaTime)
 
 void ACube::respawnCube()
 {
+	mesh->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Ignore);
 	SetActorLocation(respawnLocation,true,nullptr,ETeleportType::ResetPhysics);
+	mesh->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 }
 
