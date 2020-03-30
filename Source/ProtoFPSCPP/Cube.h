@@ -21,6 +21,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* mesh;
 
+	class 	AProtoFPSCPPCharacter* Player;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
