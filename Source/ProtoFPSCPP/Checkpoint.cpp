@@ -3,6 +3,7 @@
 #include "Checkpoint.h"
 #include "Components/StaticMeshComponent.h"
 #include "Cube.h"
+#include "ConstructorHelpers.h"
 
 // Sets default values
 ACheckpoint::ACheckpoint()
@@ -10,7 +11,9 @@ ACheckpoint::ACheckpoint()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("mesh"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>meshRef(TEXT("/Game/Meshes/SM_AssetPlatform"));
 	SetRootComponent(mesh);
+	mesh->SetStaticMesh(meshRef.Object);
 	mesh->SetCollisionProfileName("BlockAllDynamic");
 	mesh->SetNotifyRigidBodyCollision(true);
 	mesh->OnComponentHit.AddDynamic(this, &ACheckpoint::OnCompHit);

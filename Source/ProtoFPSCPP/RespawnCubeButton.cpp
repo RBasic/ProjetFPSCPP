@@ -5,6 +5,7 @@
 #include "Cube.h"
 #include "Kismet/GameplayStatics.h"
 #include "ProtoFPSCPPCharacter.h"
+#include "ConstructorHelpers.h"
 
 
 // Sets default values
@@ -13,7 +14,9 @@ ARespawnCubeButton::ARespawnCubeButton()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("mesh"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>meshRef(TEXT("/Game/Meshes/Pillar_50x500"));
 	SetRootComponent(mesh);
+	mesh->SetStaticMesh(meshRef.Object);
 	mesh->SetNotifyRigidBodyCollision(true);
 	mesh->SetCollisionObjectType(ECC_GameTraceChannel3);
 }

@@ -25,6 +25,7 @@ ACube::ACube()
 	mesh->SetSimulatePhysics(true);
 	mesh->SetNotifyRigidBodyCollision(true);
 	mesh->SetCollisionObjectType(ECC_GameTraceChannel2);
+
 	static ConstructorHelpers::FObjectFinder<UMaterialInstance>mat(TEXT("/Game/Materials/CubeMaterialDisintegrate_Inst"));
 	mesh->SetMaterial(0,mat.Object);
 
@@ -66,6 +67,11 @@ void ACube::respawnCube()
 		mesh->SetScalarParameterValueOnMaterials("Amount", Alpha);
 		
 	}
+}
+
+void ACube::OnConstruction(const FTransform& Transform)
+{
+	mesh->SetWorldScale3D(FVector(scale, scale, scale));
 }
 
 

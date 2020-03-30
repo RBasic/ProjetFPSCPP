@@ -24,6 +24,8 @@ class AProtoFPSCPPCharacter : public ACharacter
 	FVector Start;
 	FVector End;
 
+	class UPrimitiveComponent* highlightComp;
+
 public:
 	AProtoFPSCPPCharacter();
 

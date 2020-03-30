@@ -51,14 +51,23 @@ void AProtoFPSCPPCharacter::BeginPlay()
 void AProtoFPSCPPCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
 	Start = GetFirstPersonCameraComponent()->GetComponentLocation();
 	End = GetFirstPersonCameraComponent()->GetForwardVector() * RaycastDistance + GetFirstPersonCameraComponent()->GetComponentLocation();
 	FCollisionQueryParams TraceParams;
 	//GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, TraceParams);
-	FCollisionObjectQueryParams queryParams = (ECC_TO_BITFIELD(ECC_GameTraceChannel2)|ECC_TO_BITFIELD(ECC_GameTraceChannel3));
-	GetWorld()->LineTraceSingleByObjectType(Hit,Start,End,queryParams);
-
+	FCollisionObjectQueryParams queryParams = (ECC_TO_BITFIELD(ECC_GameTraceChannel2) | ECC_TO_BITFIELD(ECC_GameTraceChannel3));
+	GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, queryParams);
+	if (Hit.GetComponent()) {
+		if (Hit.GetComponent()->GetCollisionObjectType() == ECC_GameTraceChannel3 || Hit.GetComponent()->GetCollisionObjectType() == ECC_GameTraceChannel2) {
+			highlightComp = Hit.GetComponent(); 
+			highlightComp->SetRenderCustomDepth(true);
+		}
+	}
+	else if (highlightComp) {
+		highlightComp->SetRenderCustomDepth(false);
+		highlightComp = nullptr;
+	}
 	if(PhysicsHandle->GetGrabbedComponent()) {		
 			PhysicsHandle->SetTargetLocationAndRotation(End, FRotator::ZeroRotator);		
 		/*GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("You are hitting: %s"),

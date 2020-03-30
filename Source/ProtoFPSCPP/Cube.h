@@ -26,7 +26,10 @@ public:
 	float Alpha = 0.f;
 
 	UPROPERTY(EditAnywhere)
-		float Speed = 1.f;
+	float Speed = 1.f;
+
+	UPROPERTY(EditAnywhere)
+	float scale = 1.f;
 
 	bool respawn = false;
 protected:
@@ -37,6 +40,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void respawnCube();
+	virtual void OnConstruction(const FTransform& Transform) override;
 
 	
 };
