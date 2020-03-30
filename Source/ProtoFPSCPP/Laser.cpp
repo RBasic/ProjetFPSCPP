@@ -5,6 +5,7 @@
 #include "DrawDebugHelpers.h"
 #include "ConstructorHelpers.h"
 #include "Cube.h"
+#include "ProtoFPSCPPCharacter.h"
 
 
 // Sets default values
@@ -52,7 +53,8 @@ void ALaser::Tick(float DeltaTime)
 			{
 				ACube* temp = Cast<ACube>(hit.GetActor());
 				if (temp) {
-					temp->respawnCube();
+					temp->Player->release();
+					temp->respawn = true;
 				}			
 			}
 		}

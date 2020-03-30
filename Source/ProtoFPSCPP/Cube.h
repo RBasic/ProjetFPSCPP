@@ -23,6 +23,12 @@ public:
 
 	class 	AProtoFPSCPPCharacter* Player;
 
+	float Alpha = 0.f;
+
+	UPROPERTY(EditAnywhere)
+		float Speed = 1.f;
+
+	bool respawn = false;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -31,4 +37,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void respawnCube();
+
+	
 };

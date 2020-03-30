@@ -6,6 +6,8 @@
 #include "ProtoFPSCPPCharacter.h"
 #include "EngineGlobals.h"
 #include "Engine.h"
+#include "Materials/MaterialInstanceDynamic.h"
+#include "Math/UnrealMathUtility.h"
 
 
 
@@ -36,14 +38,31 @@ void ACube::BeginPlay()
 void ACube::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (respawn && Alpha <= 1) {
+		Alpha += DeltaTime * Speed;
+		mesh->SetScalarParameterValueOnMaterials("Amount", Alpha);
+	}
+	else if( Alpha > 1 )
+	{		
+		Alpha = 0;
+		respawnCube();
+		
+	}
 }
-
 void ACube::respawnCube()
 {
-
-	mesh->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Ignore);
-	Player->release();	
-	SetActorLocation(respawnLocation,true,nullptr,ETeleportType::ResetPhysics);
-    mesh->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	if (respawn) {
+		respawn = false;
+		mesh->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Ignore);
+		mesh->SetAllPhysicsLinearVelocity(FVector::ZeroVector);
+		mesh->SetAllPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
+		SetActorLocation(respawnLocation, true, nullptr, ETeleportType::ResetPhysics);
+		mesh->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+		mesh->SetScalarParameterValueOnMaterials("Amount", Alpha);
+		
+	}
 }
+
+
+
 

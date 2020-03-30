@@ -4,6 +4,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Cube.h"
 #include "Kismet/GameplayStatics.h"
+#include "ProtoFPSCPPCharacter.h"
 
 
 // Sets default values
@@ -33,6 +34,10 @@ void ARespawnCubeButton::Tick(float DeltaTime)
 
 void ARespawnCubeButton::Interact() {
 	for (AActor* cube : cubeRef) {
-		Cast<ACube>(cube)->respawnCube();
+		 ACube *temp = Cast<ACube>(cube);
+		 temp->Player->release();
+		 temp->respawn = true;
+		
+
 	}
 }
