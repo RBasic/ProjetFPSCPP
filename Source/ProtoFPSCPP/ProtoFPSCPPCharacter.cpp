@@ -8,6 +8,7 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
+#include "Public/InteractibleInterface.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "DrawDebugHelpers.h"
@@ -23,7 +24,7 @@ DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 AProtoFPSCPPCharacter::AProtoFPSCPPCharacter()
 {
 	// Set size for collision capsule
-	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
+	GetCapsuleComponent()->InitCapsuleSize(32.f, 96.0f);
 
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
@@ -125,6 +126,12 @@ void AProtoFPSCPPCharacter::LookUpAtRate(float Rate)
 void AProtoFPSCPPCharacter::Interact()
 {
 	if (Hit.GetActor()) {
+		IInteractibleInterface* InteractibleActorRef = Cast<IInteractibleInterface>(Hit.GetActor());
+		if (InteractibleActorRef) {
+			InteractibleActorRef->Interact();
+			return;
+		}
+
 		ARespawnCubeButton* temp = Cast<ARespawnCubeButton>(Hit.GetActor());
 		if (temp) {
 			temp->Interact();
