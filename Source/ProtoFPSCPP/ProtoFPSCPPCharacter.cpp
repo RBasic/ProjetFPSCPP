@@ -59,10 +59,10 @@ void AProtoFPSCPPCharacter::Tick(float DeltaTime)
 	FCollisionObjectQueryParams queryParams = (ECC_TO_BITFIELD(ECC_GameTraceChannel2)|ECC_TO_BITFIELD(ECC_GameTraceChannel3));
 	GetWorld()->LineTraceSingleByObjectType(Hit,Start,End,queryParams);
 
-	if(PhysicsHandle->GetGrabbedComponent()) {
-		PhysicsHandle->SetTargetLocationAndRotation(End,FRotator::ZeroRotator);
-		GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("You are hitting: %s"),
-			*PhysicsHandle->GetGrabbedComponent()->GetName()));
+	if(PhysicsHandle->GetGrabbedComponent()) {		
+			PhysicsHandle->SetTargetLocationAndRotation(End, FRotator::ZeroRotator);		
+		/*GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("You are hitting: %s"),
+			*PhysicsHandle->GetGrabbedComponent()->GetName()));*/
 	}
 }
 
@@ -91,6 +91,15 @@ void AProtoFPSCPPCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAxis("TurnRate", this, &AProtoFPSCPPCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AProtoFPSCPPCharacter::LookUpAtRate);
+}
+
+bool AProtoFPSCPPCharacter::release()
+{
+	if (PhysicsHandle->GetGrabbedComponent()) {
+		PhysicsHandle->ReleaseComponent();
+		return true;
+	}
+	return false;
 }
 
 void AProtoFPSCPPCharacter::MoveForward(float Value)
@@ -142,21 +151,18 @@ void AProtoFPSCPPCharacter::Interact()
 				temp->SetVectorParameterValueOnMaterials("DiffuseColor", FVector(0, 0, 0));
 			}
 			else if (Hit.GetComponent()->GetCollisionObjectType() == ECC_GameTraceChannel2) {
-				if (PhysicsHandle->GetGrabbedComponent()) {
-					PhysicsHandle->GetGrabbedComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
-					PhysicsHandle->ReleaseComponent();
-				}
+				if (release()) {}
 				else {
 					DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.0f);
 					if (Hit.GetComponent()) {
 						PhysicsHandle->GrabComponentAtLocationWithRotation(Hit.GetComponent(), Hit.BoneName, Hit.GetComponent()->GetCenterOfMass(),FRotator::ZeroRotator);
 						PhysicsHandle->GetGrabbedComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
-						if (GEngine) {
+				/*		if (GEngine) {
 							GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("You are hitting: %s"),
 								*Hit.GetActor()->GetName()));
 							GEngine->AddOnScreenDebugMessage(-1, 1.F, FColor::Red, FString::Printf(TEXT("Impact Point : %s"),
 								*Hit.ImpactPoint.ToString()));
-						}
+						}*/
 					}
 				}
 			}

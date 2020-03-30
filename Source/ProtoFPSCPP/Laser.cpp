@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
 #include "Laser.h"
 #include "Components/StaticMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "DrawDebugHelpers.h"
+#include "ConstructorHelpers.h"
+#include "Cube.h"
 
 
 // Sets default values
@@ -13,6 +14,9 @@ ALaser::ALaser()
 	PrimaryActorTick.bCanEverTick = true;
 	Particles = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ParticleSystem"));
 	SetRootComponent(Particles);
+
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>ParticlesRef(TEXT("/Game/Particles/P_beam"));
+	Particles->SetTemplate(ParticlesRef.Object);
 }
 
 // Called when the game starts or when spawned
@@ -40,5 +44,19 @@ void ALaser::Tick(float DeltaTime)
 	if (Particles) {
 		Particles->SetBeamSourcePoint(0, currentStart, 0);
 		Particles->SetBeamTargetPoint(0, currentEnd, 0);
+		FHitResult hit;
+		FCollisionObjectQueryParams QueryParams;
+		DrawDebugLine(GetWorld(), currentStart, currentEnd, FColor::Green, true);
+		if (GetWorld()->LineTraceSingleByObjectType(hit, currentStart, currentEnd, QueryParams)) {
+			if (hit.GetActor())
+			{
+				ACube* temp = Cast<ACube>(hit.GetActor());
+				if (temp) {
+					temp->respawnCube();
+				}			
+			}
+		}
+
+
 	}
 }

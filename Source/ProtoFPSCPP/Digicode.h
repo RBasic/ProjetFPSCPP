@@ -4,24 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Cube.generated.h"
+#include "Digicode.generated.h"
 
 UCLASS()
-class PROTOFPSCPP_API ACube : public AActor
+class PROTOFPSCPP_API ADigicode : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ACube();
 
-	UPROPERTY(VisibleAnywhere)
-	FVector respawnLocation;
+	TArray<int> code;
 
 	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* mesh;
+	TArray<int> correctCode;
 
-	class 	AProtoFPSCPPCharacter* Player;
+	class UTextRenderComponent* textCode;
+
+public:	
+	// Sets default values for this actor's properties
+	ADigicode();
 
 protected:
 	// Called when the game starts or when spawned
@@ -30,5 +29,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	void respawnCube();
+	bool verifCode();
+	void changeNumber(int index, bool up);
 };

@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "RespawnCubeButton.h"
 #include "Components/StaticMeshComponent.h"
 #include "Cube.h"
 #include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 ARespawnCubeButton::ARespawnCubeButton()

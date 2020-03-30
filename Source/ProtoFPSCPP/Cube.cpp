@@ -2,6 +2,13 @@
 
 #include "Cube.h"
 #include "Components/StaticMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "ProtoFPSCPPCharacter.h"
+#include "EngineGlobals.h"
+#include "Engine.h"
+
+
+
 
 // Sets default values
 ACube::ACube()
@@ -21,6 +28,8 @@ ACube::ACube()
 void ACube::BeginPlay()
 {
 	Super::BeginPlay();
+	Player = Cast<AProtoFPSCPPCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(),0));
+	
 }
 
 // Called every frame
@@ -31,8 +40,10 @@ void ACube::Tick(float DeltaTime)
 
 void ACube::respawnCube()
 {
+
 	mesh->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Ignore);
+	Player->release();	
 	SetActorLocation(respawnLocation,true,nullptr,ETeleportType::ResetPhysics);
-	mesh->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+    mesh->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 }
 
