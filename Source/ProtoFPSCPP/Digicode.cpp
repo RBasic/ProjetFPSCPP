@@ -3,6 +3,9 @@
 
 #include "Digicode.h"
 #include "Components/TextRenderComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "UObject/ConstructorHelpers.h"
+
 
 // Sets default values
 ADigicode::ADigicode()
@@ -13,6 +16,16 @@ ADigicode::ADigicode()
 	code[3] = 7;
 	textCode = CreateDefaultSubobject<UTextRenderComponent>(TEXT("TextRender"));
 	SetRootComponent(textCode);
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>meshRef(TEXT("/Game/Geometry/Meshes/1M_Cube"));
+	arrowMesh = meshRef.Object;
+
+	for (int32 i = 0; i < 12; i++) {
+		FName name = *FString::Printf(TEXT("Mesh%i"), i);
+		UStaticMeshComponent* mesh = CreateDefaultSubobject<UStaticMeshComponent>(name);
+		arrows.Add(mesh);
+		mesh->AttachTo(textCode);
+		mesh->SetStaticMesh(arrowMesh);
+	}
 }
 
 // Called when the game starts or when spawned

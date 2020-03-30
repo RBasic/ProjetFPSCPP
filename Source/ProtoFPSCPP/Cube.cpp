@@ -8,6 +8,7 @@
 #include "Engine.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Math/UnrealMathUtility.h"
+#include "ConstructorHelpers.h"
 
 
 
@@ -17,11 +18,15 @@ ACube::ACube()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>meshRef(TEXT("/Game/Geometry/Meshes/1M_Cube"));
 	mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("mesh"));
 	SetRootComponent(mesh);
+	mesh->SetStaticMesh(meshRef.Object);
 	mesh->SetSimulatePhysics(true);
 	mesh->SetNotifyRigidBodyCollision(true);
 	mesh->SetCollisionObjectType(ECC_GameTraceChannel2);
+	static ConstructorHelpers::FObjectFinder<UMaterialInstance>mat(TEXT("/Game/Materials/CubeMaterialDisintegrate_Inst"));
+	mesh->SetMaterial(0,mat.Object);
 
 	respawnLocation = GetActorLocation();
 }

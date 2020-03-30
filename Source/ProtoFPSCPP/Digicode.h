@@ -16,7 +16,15 @@ class PROTOFPSCPP_API ADigicode : public AActor
 	UPROPERTY(EditAnywhere)
 	TArray<int> correctCode;
 
+	UPROPERTY(EditAnywhere)
 	class UTextRenderComponent* textCode;
+
+	UPROPERTY(EditAnywhere)
+	class UStaticMesh* arrowMesh;
+
+	UPROPERTY(EditAnywhere)
+	TArray<UStaticMeshComponent*> arrows;
+
 
 public:	
 	// Sets default values for this actor's properties
