@@ -4,6 +4,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Laser.h"
 #include "DrawDebugHelpers.h"
+#include "ConstructorHelpers.h"
 
 
 // Sets default values
@@ -13,6 +14,9 @@ ALaser::ALaser()
 	PrimaryActorTick.bCanEverTick = true;
 	Particles = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ParticleSystem"));
 	SetRootComponent(Particles);
+
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>ParticlesRef(TEXT("/Game/Particles/P_beam"));
+	Particles->SetTemplate(ParticlesRef.Object);
 }
 
 // Called when the game starts or when spawned
